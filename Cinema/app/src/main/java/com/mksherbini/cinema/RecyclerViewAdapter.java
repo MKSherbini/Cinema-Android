@@ -13,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.mksherbini.cinema.MVCModel.TDBResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -23,13 +25,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     private Context mContext;
-    private ArrayList<String> mImages = new ArrayList<>();
-    private ArrayList<String> mImageNames = new ArrayList<>();
+    private List<TDBResult> TDBResults = null;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<String> mImages, ArrayList<String> mImageNames) {
+    public RecyclerViewAdapter(Context mContext, List<TDBResult> TDBResults) {
         this.mContext = mContext;
-        this.mImages = mImages;
-        this.mImageNames = mImageNames;
+        this.TDBResults = TDBResults;
     }
 
     @NonNull
@@ -43,20 +43,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called onBindViewHolder");
-        Glide.with(mContext).asBitmap().load(mImages.get(position)).into(holder.image);
-        holder.iamgeName.setText(mImageNames.get(position));
+        Glide.with(mContext).asBitmap().load("https://image.tmdb.org/t/p/w500" + TDBResults.get(position).getPosterPath()).into(holder.image);
+        holder.iamgeName.setText(TDBResults.get(position).getOriginalTitle());
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: Clicked on: " + mImageNames.get(position));
-                Toast.makeText(mContext, mImageNames.get(position), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: Clicked on: " + TDBResults.get(position).getOriginalTitle());
+                Toast.makeText(mContext, TDBResults.get(position).getOriginalTitle(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mImageNames.size();
+        return TDBResults.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
